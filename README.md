@@ -39,6 +39,9 @@ knex migrate:latest --env development
 knex seed:run --env development
 `
 * The following command to start the server `npm start`.
+* There is an initial user set up in the seeds and the credentials for login are {username: 'user1', password: 'password1''}
+* I assumed the status field was the same field we wished to use for inactive so to mark an asset inactive the status field can be patched.
+
 
 # Testing
 Testing was done using mocha, chai, chai_http and sinon.
