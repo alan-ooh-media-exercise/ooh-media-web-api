@@ -10,8 +10,7 @@ exports.up = function(knex, Promise) {
     table.string('physical_dimensions').notNullable();
     table.string('location').notNullable();
     table.boolean('status').defaultTo(true);
-    table.integer('shopping_centre').unsigned().notNullable();
-    table.foreign('shopping_centre').references('id').inTable('shopping_centres')
+    table.integer('shopping_centre').unsigned().notNullable().references('id').inTable('shopping_centres').onDelete('cascade');
  });
 
 };

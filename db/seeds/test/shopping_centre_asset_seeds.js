@@ -8,11 +8,12 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('shopping_centres').insert([
-        {id: 1, name: 'seed', address: '1 seed lane'}
+        {name: 'seed', address: '1 seed lane'}
       ]);
     }).then(function () {
         return knex('assets').insert([
-            {id: 1, name: 'asset 1', physical_dimensions: '1920x168', location: 'beside blockbuster', shopping_centre: 1}
+            {name: 'asset 1', physical_dimensions: '1920x168', location: 'beside blockbuster', shopping_centre: 1},
+            {name: 'asset 2', physical_dimensions: '1920x178', location: 'beside walmart', shopping_centre: 1}
         ]);
     });
 };
