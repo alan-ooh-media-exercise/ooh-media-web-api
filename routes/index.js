@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var queries = require('../db/queries');
+const queries = require('../db/queries');
 
 // Start Shopping Centre Endpoints
 router.get('/shoppingcentres', function(req, res, next) {

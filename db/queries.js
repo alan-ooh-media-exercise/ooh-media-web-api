@@ -1,4 +1,5 @@
-var knex = require('./knex.js');
+const bcrypt = require('bcryptjs');
+const knex = require('./knex.js');
 
 
 // START Shopping Centre Queries
@@ -49,16 +50,38 @@ function deleteAsset(id) {
 
 // END Asset Queries
 
+// User Queries
+function getUsers() {
+  return knex('users').select();
+}
+
+function getUsers() {
+  return getUsers.where('id', parseInt(id)).first();
+}
+
+function createUser (data) {
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(data.password, salt);
+  return knex('users')
+  .insert({
+    username: data.username,
+    password: hash
+  })
+  .returning('*');
+}
+
 
 module.exports = {
-  getShoppingCentres: getShoppingCentres,
-  getShoppingCentre: getShoppingCentre,
-  addShoppingCentre: addShoppingCentre,
-  updateShoppingCentre: updateShoppingCentre,
-  deleteShoppingCentre: deleteShoppingCentre,
-  getAssets: getAssets,
-  getAsset: getAsset,
-  addAsset: addAsset,
-  updateAsset: updateAsset,
-  deleteAsset: deleteAsset,
+  getShoppingCentres,
+  getShoppingCentre,
+  addShoppingCentre,
+  updateShoppingCentre,
+  deleteShoppingCentre,
+  getAssets,
+  getAsset,
+  addAsset,
+  updateAsset,
+  deleteAsset,
+  getUsers,
+  createUser
 };

@@ -1,22 +1,37 @@
 process.env.NODE_ENV = 'test';
 
-var chai = require('chai');
-var should = chai.should();
-var chaiHttp = require('chai-http');
-var server = require('../app');
+const chai = require('chai');
+const should = chai.should();
+const chaiHttp = require('chai-http');
 
-var knex = require('../db/knex');
+const knex = require('../db/knex');
 
+const sinon = require('sinon');
+
+const auth = require('../auth/_helpers')
 
 
 chai.use(chaiHttp);
 
+var agent;
+
 // Shopping Centre Crud
+
 
 // Authenticated User
 describe('GET/POST /api/shopping_centres logged in', function() {
 
-    // Handle Authentication here
+   let sandbox;
+
+   before(function () {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(auth, 'loginRequired').callsFake(function(req, res, next) {return next();})
+        const app = require('../app');
+        agent = chai.request.agent(app);
+   });
+
+   after(() => sandbox.restore())
+
     beforeEach(() => knex.migrate.rollback()
       .then(() => knex.migrate.latest())
       .then(() => knex.seed.run())
@@ -25,7 +40,7 @@ describe('GET/POST /api/shopping_centres logged in', function() {
     afterEach(() => knex.migrate.rollback());
 
     it('should return all shopping centres', function(done) {
-      chai.request(server)
+      agent
       .get('/api/shoppingcentres')
       .end(function(err, res) {
             res.should.have.status(200);
@@ -41,7 +56,7 @@ describe('GET/POST /api/shopping_centres logged in', function() {
 });
 
     it('should create a new shopping centre instance', function(done) {
-        chai.request(server)
+        agent
         .post('/api/shoppingcentres')
         .send({
             name: 'shopping centre 2',
@@ -65,8 +80,17 @@ describe('GET/POST /api/shopping_centres logged in', function() {
 });
 
 describe('GET/PATCH/DELETE /api/shopping_centres/:id logged in', function() {
+    let sandbox;
 
-    // Handle Authentication here
+   before(function () {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(auth, 'loginRequired').callsFake((req, res, next) => next())
+        const app = require('../app');
+        agent = chai.request.agent(app);
+   });
+
+   after(() => sandbox.restore())
+
     beforeEach(() => knex.migrate.rollback()
       .then(() => knex.migrate.latest())
       .then(() => knex.seed.run())
@@ -75,7 +99,7 @@ describe('GET/PATCH/DELETE /api/shopping_centres/:id logged in', function() {
     afterEach(() => knex.migrate.rollback());
 
     it('should return a single shopping centre', function(done) {
-      chai.request(server)
+      agent
       .get('/api/shoppingcentres/1')
       .end(function(err, res) {
             res.should.have.status(200);
@@ -91,7 +115,7 @@ describe('GET/PATCH/DELETE /api/shopping_centres/:id logged in', function() {
 
     it('PATCH /api/shopping_centres/:id logged in', function(done) {
         // TODO: Ensure AuditLog Kept
-        chai.request(server)
+        agent
             .patch('/api/shoppingcentres/1')
             .send({
                 name: 'seed updated'
@@ -110,7 +134,7 @@ describe('GET/PATCH/DELETE /api/shopping_centres/:id logged in', function() {
 
     it('DELETE /api/shopping_centres/:id logged in', function() {
     // TODO: Ensure AuditLog Kept
-        chai.request(server)
+        agent
             .delete('/api/shoppingcentres/2')
             .then(function(err, res) {
                 res.should.have.status(204);
@@ -125,8 +149,17 @@ describe('GET/PATCH/DELETE /api/shopping_centres/:id logged in', function() {
 // Authenticated User
 describe('GET/POST /api/assets logged in', function() {
 
+    let sandbox;
 
-    // Handle Authentication here
+   before(function () {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(auth, 'loginRequired').callsFake((req, res, next) => next())
+        const app = require('../app');
+        agent = chai.request.agent(app);
+   });
+
+   after(() => sandbox.restore())
+
     beforeEach(() => knex.migrate.rollback()
       .then(() => knex.migrate.latest())
       .then(() => knex.seed.run())
@@ -134,8 +167,9 @@ describe('GET/POST /api/assets logged in', function() {
 
     afterEach(() => knex.migrate.rollback());
 
+
     it('should return all assets', function(done) {
-      chai.request(server)
+      agent
       .get('/api/assets')
       .end(function(err, res) {
             res.should.have.status(200);
@@ -155,7 +189,7 @@ describe('GET/POST /api/assets logged in', function() {
 });
 
     it('should create a new asset instance', function(done) {
-        chai.request(server)
+        agent
         .post('/api/assets')
         .send({
             name: 'asset 3',
@@ -186,8 +220,17 @@ describe('GET/POST /api/assets logged in', function() {
 
 describe('GET/PATCH/DELETE /api/assets/:id logged in', function() {
 
+   let sandbox;
 
-    // Handle Authentication here
+   before(function () {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(auth, 'loginRequired').callsFake((req, res, next) => next())
+        const app = require('../app');
+        agent = chai.request.agent(app);
+   });
+
+   after(() => sandbox.restore())
+
     beforeEach(() => knex.migrate.rollback()
       .then(() => knex.migrate.latest())
       .then(() => knex.seed.run())
@@ -196,7 +239,7 @@ describe('GET/PATCH/DELETE /api/assets/:id logged in', function() {
     afterEach(() => knex.migrate.rollback());
 
     it('should return a single asset', function(done) {
-      chai.request(server)
+      agent
       .get('/api/assets/1')
       .end(function(err, res) {
             res.should.have.status(200);
@@ -217,7 +260,7 @@ describe('GET/PATCH/DELETE /api/assets/:id logged in', function() {
 
     it('PATCH /api/assets/:id logged in', function(done) {
         // TODO: Ensure AuditLog Kept
-        chai.request(server)
+        agent
             .patch('/api/assets/1')
             .send({
                 name: 'asset 1 updated'
@@ -234,7 +277,7 @@ describe('GET/PATCH/DELETE /api/assets/:id logged in', function() {
 
     it('DELETE /api/assets/:id logged in', function() {
     // TODO: Ensure AuditLog Kept
-           chai.request(server)
+           agent
             .delete('/api/assets/2')
             .end(function(err, res) {
                 res.should.have.status(204);
