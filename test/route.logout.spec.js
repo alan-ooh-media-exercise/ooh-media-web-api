@@ -12,7 +12,7 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const auth = require('../auth/_helpers')
+const auth = require('../auth/_helpers');
 
 
 describe('Test Auth Endpoint logout', () => {
@@ -23,13 +23,13 @@ describe('Test Auth Endpoint logout', () => {
    before(function () {
         sandbox = sinon.createSandbox();
         // Add your stubs here
-        sandbox.stub(auth, 'loginRequired').callsFake(function(req, res, next) {return next();})
+        sandbox.stub(auth, 'loginRequired').callsFake(function(req, res, next) {return next();});
         // required here so we can stub methods present in app.js, such as loginRequired
         app = require('../app');
         agent = chai.request.agent(app);
    });
 
-   after(() => sandbox.restore())
+   after(() => sandbox.restore());
 
     // Handle Authentication here
     beforeEach(() => knex.migrate.rollback()
@@ -38,7 +38,7 @@ describe('Test Auth Endpoint logout', () => {
     );
 
     afterEach(() => {
-        return knex.migrate.rollback()
+        return knex.migrate.rollback();
     });
 
      it('should logout a user', (done) => {

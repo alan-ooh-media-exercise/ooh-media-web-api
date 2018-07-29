@@ -3,6 +3,18 @@ const router = express.Router();
 
 const queries = require('../db/queries');
 
+// AuditLog Endpoints
+router.get('/auditlogs', function(req, res, next) {
+  queries.getAuditLogs()
+  .then(function(auditlogs) {
+    res.status(200).json(auditlogs);
+  })
+  .catch(function(error) {
+    next(error);
+  });
+});
+// END
+
 // Start Shopping Centre Endpoints
 router.get('/shoppingcentres', function(req, res, next) {
   queries.getShoppingCentres()
@@ -16,6 +28,9 @@ router.get('/shoppingcentres', function(req, res, next) {
 
 router.post('/shoppingcentres', function(req, res, next) {
   queries.addShoppingCentre(req.body)
+  .then(function(id) {
+    return queries.addAuditLog({user_id: req.user.id, method: 'POST', model_id: parseInt(id), model: 'ShoppingCentres'});
+  })
   .then(function(id) {
     return queries.getShoppingCentre(id);
   })
@@ -42,6 +57,9 @@ router.patch('/shoppingcentres/:id', function(req, res, next) {
   const id = req.params.id;
   queries.updateShoppingCentre(id, req.body)
   .then(function(id) {
+    return queries.addAuditLog({user_id: req.user.id, method: 'PATCH', model_id: parseInt(id), model: 'ShoppingCentres'});
+  })
+  .then(function(id) {
     return queries.getShoppingCentre(id);
   })
   .then(function(shoppingCentre) {
@@ -55,6 +73,9 @@ router.patch('/shoppingcentres/:id', function(req, res, next) {
 router.delete('/shoppingcentres/:id', function(req, res, next) {
   const id = req.params.id;
   queries.deleteShoppingCentre(id)
+  .then(function() {
+    return queries.addAuditLog({user_id: req.user.id, method: 'DELETE', model_id: parseInt(id), model: 'ShoppingCentres'});
+  })
   .then(function() {
     res.status(204);
   })
@@ -78,6 +99,9 @@ router.get('/assets', function(req, res, next) {
 
 router.post('/assets', function(req, res, next) {
   queries.addAsset(req.body)
+  .then(function(id) {
+    return queries.addAuditLog({user_id: req.user.id, method: 'POST', model_id: parseInt(id), model: 'Assets'});
+  })
   .then(function(id) {
     return queries.getAsset(id);
   })
@@ -104,6 +128,9 @@ router.patch('/assets/:id', function(req, res, next) {
   const id = req.params.id;
   queries.updateAsset(id, req.body)
   .then(function(id) {
+    return queries.addAuditLog({user_id: req.user.id, method: 'PATCH', model_id: parseInt(id), model: 'Assets'});
+  })
+  .then(function(id) {
     return queries.getAsset(id);
   })
   .then(function(asset) {
@@ -117,6 +144,9 @@ router.patch('/assets/:id', function(req, res, next) {
 router.delete('/assets/:id', function(req, res, next) {
   const id = req.params.id;
   queries.deleteAsset(id)
+  .then(function(id) {
+    return queries.addAuditLog({user_id: req.user.id, method: 'DELETE', model_id: parseInt(id), model: 'Assets'});
+  })
   .then(function() {
     res.status(204);
   })

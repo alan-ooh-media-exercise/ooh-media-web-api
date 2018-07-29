@@ -55,8 +55,8 @@ function getUsers() {
   return knex('users').select();
 }
 
-function getUsers() {
-  return getUsers.where('id', parseInt(id)).first();
+function getUser(id) {
+  return getUsers().where('id', parseInt(id)).first();
 }
 
 function createUser (data) {
@@ -70,6 +70,20 @@ function createUser (data) {
   .returning('*');
 }
 
+// End User Queries
+
+// Start AuditLog Queries
+
+function getAuditLogs() {
+    return knex('auditlog').select();
+}
+
+function addAuditLog(data) {
+    // Returns id for the logged instance of the model
+    return getAuditLogs().insert(data).returning('model_id');
+}
+
+// End AuditLog Queries
 
 module.exports = {
   getShoppingCentres,
@@ -83,5 +97,8 @@ module.exports = {
   updateAsset,
   deleteAsset,
   getUsers,
-  createUser
+  getUser,
+  createUser,
+  getAuditLogs,
+  addAuditLog
 };

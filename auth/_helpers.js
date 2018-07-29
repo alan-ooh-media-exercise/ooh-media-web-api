@@ -12,5 +12,5 @@ function loginRequired(req, res, next) {
 
 module.exports = {
   comparePassword,
-  loginRequired: loginRequired
+  loginRequired
 };

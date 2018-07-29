@@ -25,4 +25,9 @@ coverage
 
 # Benchmarking
 benchmarks/graphs
-s
+
+# Environment specific
+.env
+
+# Pycharm files
+.idea

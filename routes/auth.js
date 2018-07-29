@@ -23,7 +23,7 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/logout', authHelpers.loginRequired, (req, res, next) => {
-  req.logout()
+  req.logout();
   handleResponse(res, 200, 'success');
 });
 

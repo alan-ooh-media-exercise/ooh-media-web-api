@@ -12,7 +12,7 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const auth = require('../auth/_helpers')
+const auth = require('../auth/_helpers');
 
 describe('Test Auth Endpoint /login', () => {
 
@@ -29,8 +29,8 @@ describe('Test Auth Endpoint /login', () => {
    });
 
    after(() => {
-    sandbox.restore()
-   })
+    sandbox.restore();
+   });
 
     // Handle Authentication here
     beforeEach(() => knex.migrate.rollback()
@@ -39,7 +39,7 @@ describe('Test Auth Endpoint /login', () => {
     );
 
     afterEach(() => {
-        return knex.migrate.rollback()
+        return knex.migrate.rollback();
     });
 
       it('should login a user', (done) => {

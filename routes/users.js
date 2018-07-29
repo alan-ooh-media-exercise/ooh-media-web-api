@@ -17,7 +17,7 @@ router.get('/', authHelpers.loginRequired, function(req, res, next) {
 
 // Get User Instance
 router.get('/:id', authHelpers.loginRequired, function(req, res, next) {
-  queries.getUser(req.body.id)
+  queries.getUser(req.params.id)
   .then(function(user) {
     res.status(200).json(user);
   })
